@@ -32,13 +32,28 @@ export default function AlarmRing({ alarm, onDismiss }) {
     };
   }, []);
 
+  // Helper function para gawing 12-hour format na may AM/PM
+  const formatTime = (timeString) => {
+    if (!timeString) return "";
+    const [hoursStr, minutesStr] = timeString.split(":");
+    let hours = parseInt(hoursStr, 10);
+    const minutes = minutesStr;
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Ang 0 ay magiging 12
+
+    return `${hours}:${minutes} ${ampm}`;
+  };
+
   return (
     <div className="ring-overlay">
       <div className="ring-card">
         <div className="ring-icon">
           <img src="/alarm-fred.png" alt="takda" className="ring-icon-image" />
         </div>
-        <div className="ring-time">{alarm.time}</div>
+        {/* Dito tinawag ang formatter */}
+        <div className="ring-time">{formatTime(alarm.time)}</div>
         <h2 className="ring-title">{alarm.title}</h2>
         {alarm.description && <p className="ring-desc">{alarm.description}</p>}
         <p className="ring-creator">Set by {alarm.creatorName}</p>

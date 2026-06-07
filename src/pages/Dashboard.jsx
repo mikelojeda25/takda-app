@@ -44,7 +44,7 @@ export default function Dashboard() {
       <header className="dash-header">
         <div className="dash-logo">
           <img src="/alarm-icon.webp" className="home-icon" alt="takda" />
-          <span className="dash-logo-text">takda</span>
+          <span className="dash-logo-text">Takda</span>
         </div>
         <div className="dash-user">
           <img
@@ -60,17 +60,13 @@ export default function Dashboard() {
       </header>
 
       <div className="dash-filters">
-        {["all", "mine", "team"].map((f) => (
+        {["all", "mine"].map((f) => (
           <button
             key={f}
             className={`filter-btn ${filter === f ? "active" : ""}`}
             onClick={() => setFilter(f)}
           >
-            {f === "all"
-              ? "All Alarms"
-              : f === "mine"
-                ? "My Alarms"
-                : "Team Alarms"}
+            {f === "all" ? "All Alarms" : "My Alarms"}
           </button>
         ))}
       </div>
@@ -82,7 +78,7 @@ export default function Dashboard() {
               <img src="/alarm-icon.webp" alt="takda" className="home-icon" />
               <span className="dash-logo-text">Takda</span>
             </div>
-            <p>Wala pang alarm.</p>
+            <p>Create an alarm to get started.</p>
             <button
               className="btn-add-first"
               onClick={() => setShowCreate(true)}
