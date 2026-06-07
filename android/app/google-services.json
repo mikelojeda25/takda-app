@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1001772889118",
+    "project_id": "takda-8de4d",
+    "storage_bucket": "takda-8de4d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001772889118:android:d88f1c5166a45e1efb6a0f",
+        "android_client_info": {
+          "package_name": "com.takda.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001772889118-64v1kr0evv7chgq4ib8vt27r0j5iprsr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEY7qwEZglzFZ6Dk8eX_cF6sCRkSUx7zc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001772889118-64v1kr0evv7chgq4ib8vt27r0j5iprsr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
