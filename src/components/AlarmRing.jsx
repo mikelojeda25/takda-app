@@ -35,7 +35,9 @@ export default function AlarmRing({ alarm, onDismiss }) {
   return (
     <div className="ring-overlay">
       <div className="ring-card">
-        <div className="ring-icon">⏰</div>
+        <div className="ring-icon">
+          <img src="/alarm-fred.png" alt="takda" className="ring-icon-image" />
+        </div>
         <div className="ring-time">{alarm.time}</div>
         <h2 className="ring-title">{alarm.title}</h2>
         {alarm.description && <p className="ring-desc">{alarm.description}</p>}

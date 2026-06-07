@@ -9,12 +9,17 @@ export default function AlarmCard({
   onEdit,
   onDelete,
   onInvite,
+  onDetail,
 }) {
   const isOwner = alarm.createdBy === currentUser.uid;
   const nextDate = alarm.active ? getNextAlarmDate(alarm) : null;
 
   return (
-    <div className={`alarm-card ${alarm.active ? "active" : "inactive"}`}>
+    <div
+      className={`alarm-card ${alarm.active ? "active" : "inactive"}`}
+      onClick={() => onDetail(alarm)}
+      style={{ cursor: "pointer" }}
+    >
       <div className="alarm-card-left">
         <div className="alarm-time">
           {(() => {
@@ -28,7 +33,7 @@ export default function AlarmCard({
         {alarm.description && (
           <div className="alarm-desc">{alarm.description}</div>
         )}
-        <div className="alarm-meta">
+        <div className="alarm-meta" style={{ alignItems: "center" }}>
           <span className="alarm-repeat">{formatRepeat(alarm)}</span>
           {nextDate && (
             <span className="alarm-next">
@@ -44,8 +49,7 @@ export default function AlarmCard({
           {isOwner && <span className="owner-badge">Manager</span>}
         </div>
       </div>
-
-      <div className="alarm-card-right">
+      <div className="alarm-card-right" onClick={(e) => e.stopPropagation()}>
         <label className="toggle">
           <input
             type="checkbox"

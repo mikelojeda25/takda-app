@@ -8,7 +8,7 @@ export default function JoinAlarm() {
   const { alarmId } = useParams();
   const { user, login, loading } = useAuth();
   const navigate = useNavigate();
-  const [status, setStatus] = useState("loading"); // loading | joining | done | error
+  const [status, setStatus] = useState("loading");
   const [alarmTitle, setAlarmTitle] = useState("");
 
   useEffect(() => {
@@ -25,11 +25,23 @@ export default function JoinAlarm() {
     try {
       const ref = doc(db, "alarms", alarmId);
       const snap = await getDoc(ref);
-      if (!snap.exists()) { setStatus("error"); return; }
+      if (!snap.exists()) {
+        setStatus("error");
+        return;
+      }
       const data = snap.data();
       setAlarmTitle(data.title);
+
       if (!data.members.includes(user.uid)) {
-        await updateDoc(ref, { members: arrayUnion(user.uid) });
+        const memberDetail = {
+          uid: user.uid,
+          name: user.displayName,
+          photoURL: user.photoURL,
+        };
+        await updateDoc(ref, {
+          members: arrayUnion(user.uid),
+          memberDetails: arrayUnion(memberDetail),
+        });
       }
       setStatus("done");
       setTimeout(() => navigate("/dashboard"), 2000);
@@ -55,14 +67,19 @@ export default function JoinAlarm() {
         {status === "done" && (
           <>
             <h2>You're in! 🎉</h2>
-            <p>You joined <strong>"{alarmTitle}"</strong>. Redirecting to dashboard…</p>
+            <p>
+              You joined <strong>"{alarmTitle}"</strong>. Redirecting to
+              dashboard…
+            </p>
           </>
         )}
         {status === "error" && (
           <>
             <h2>Invalid link</h2>
             <p>This invite link is expired or doesn't exist.</p>
-            <button className="btn-save" onClick={() => navigate("/dashboard")}>Go to Dashboard</button>
+            <button className="btn-save" onClick={() => navigate("/dashboard")}>
+              Go to Dashboard
+            </button>
           </>
         )}
       </div>

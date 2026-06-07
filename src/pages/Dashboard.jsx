@@ -5,15 +5,17 @@ import AlarmCard from "../components/AlarmCard";
 import AlarmModal from "../components/AlarmModal";
 import AlarmRing from "../components/AlarmRing";
 import InviteModal from "../components/InviteModal";
+import AlarmDetailModal from "../components/AlarmDetailModal";
 import { Navigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const { user, userProfile, logout, loading } = useAuth();
+  const { user, logout, loading } = useAuth();
   const [ringing, setRinging] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const [editAlarm, setEditAlarm] = useState(null);
   const [inviteAlarm, setInviteAlarm] = useState(null);
-  const [filter, setFilter] = useState("all"); // all | mine | team
+  const [detailAlarm, setDetailAlarm] = useState(null);
+  const [filter, setFilter] = useState("all");
 
   const { alarms, createAlarm, updateAlarm, deleteAlarm, toggleAlarm } =
     useAlarms((alarm) => setRinging(alarm));
@@ -39,11 +41,10 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      {/* Header */}
       <header className="dash-header">
         <div className="dash-logo">
-          <img src="/alarm-icon.webp" alt="takda" className="home-icon" />
-          <span className="dash-logo-text">Takda</span>
+          <img src="/alarm-icon.webp" className="home-icon" alt="takda" />
+          <span className="dash-logo-text">takda</span>
         </div>
         <div className="dash-user">
           <img
@@ -58,7 +59,6 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Filter */}
       <div className="dash-filters">
         {["all", "mine", "team"].map((f) => (
           <button
@@ -75,11 +75,13 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Alarm list */}
       <main className="dash-main">
         {filtered.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">⏰</div>
+            <div className="dash-logo">
+              <img src="/alarm-icon.webp" alt="takda" className="home-icon" />
+              <span className="dash-logo-text">Takda</span>
+            </div>
             <p>Wala pang alarm.</p>
             <button
               className="btn-add-first"
@@ -99,18 +101,17 @@ export default function Dashboard() {
                 onEdit={setEditAlarm}
                 onDelete={deleteAlarm}
                 onInvite={setInviteAlarm}
+                onDetail={setDetailAlarm}
               />
             ))}
           </div>
         )}
       </main>
 
-      {/* FAB */}
       <button className="fab" onClick={() => setShowCreate(true)}>
         +
       </button>
 
-      {/* Modals */}
       {showCreate && (
         <AlarmModal onSave={handleSave} onClose={() => setShowCreate(false)} />
       )}
@@ -123,6 +124,13 @@ export default function Dashboard() {
       )}
       {inviteAlarm && (
         <InviteModal alarm={inviteAlarm} onClose={() => setInviteAlarm(null)} />
+      )}
+      {detailAlarm && (
+        <AlarmDetailModal
+          alarm={detailAlarm}
+          currentUser={user}
+          onClose={() => setDetailAlarm(null)}
+        />
       )}
       {ringing && (
         <AlarmRing alarm={ringing} onDismiss={() => setRinging(null)} />
