@@ -4,14 +4,16 @@ import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBotTZ6easx9iXUO17lghg6dWRXusfsYS4",
-  authDomain: "takda-8de4d.firebaseapp.com",
-  projectId: "takda-8de4d",
-  storageBucket: "takda-8de4d.firebasestorage.app",
-  messagingSenderId: "1001772889118",
-  appId: "1:1001772889118:web:d2a17edac9c6985ffb6a0f",
-  measurementId: "G-5WB517LK4Z"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
+
+export const VAPID_KEY = import.meta.env.VITE_VAPID_KEY;
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
@@ -25,7 +27,8 @@ try {
   console.warn("FCM not supported in this environment");
 }
 
-export const VAPID_KEY = "BLWJ0fTIa4Yqth7uRR5Kf6dODGOr1fzQPXw8UfWjTF0vlVDdqp2b80wp1cV3-n0ZWoQxZyusaeVJI9iG-BZnDT4";
+export const VAPID_KEY =
+  "BLWJ0fTIa4Yqth7uRR5Kf6dODGOr1fzQPXw8UfWjTF0vlVDdqp2b80wp1cV3-n0ZWoQxZyusaeVJI9iG-BZnDT4";
 
 export const requestNotificationPermission = async () => {
   if (!messaging) return null;
