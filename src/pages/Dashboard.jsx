@@ -75,6 +75,7 @@ export default function Dashboard() {
     if (filter === "team") return a.members?.length > 1; // ← more than 1 member
     return true;
   });
+
   const handleSave = async (form) => {
     if (editAlarm) {
       await updateAlarm(editAlarm.id, form);
