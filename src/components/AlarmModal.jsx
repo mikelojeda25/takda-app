@@ -51,7 +51,7 @@ export default function AlarmModal({ alarm, onSave, onClose }) {
 
         <div className="modal-body">
           <div className="form-group">
-            <label>Title</label>
+            <label>Task</label>
             <input
               type="text"
               placeholder="e.g. Daily Standup, Sprint Review..."
