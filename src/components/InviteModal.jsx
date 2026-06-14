@@ -26,7 +26,7 @@ export default function InviteModal({ alarm, onClose }) {
         </div>
         <div className="modal-body">
           <p className="invite-desc">
-            Share this link to your team. When they click it, they'll
+            Provide this link to your team. When they click it, they'll
             automatically join <strong>"{alarm.title}"</strong> and get the
             alarm too.
           </p>
