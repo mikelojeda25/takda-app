@@ -72,10 +72,9 @@ export default function Dashboard() {
 
   const filtered = alarms.filter((a) => {
     if (filter === "mine") return a.createdBy === user.uid;
-    if (filter === "team") return a.createdBy !== user.uid;
+    if (filter === "team") return a.members?.length > 1; // ← more than 1 member
     return true;
   });
-
   const handleSave = async (form) => {
     if (editAlarm) {
       await updateAlarm(editAlarm.id, form);
@@ -108,13 +107,13 @@ export default function Dashboard() {
 
       <div className="dash-filters">
         <div className="filter-section">
-          {["all", "mine"].map((f) => (
+          {["all", "mine", "team"].map((f) => (
             <button
               key={f}
               className={`filter-btn ${filter === f ? "active" : ""}`}
               onClick={() => setFilter(f)}
             >
-              {f === "all" ? "All Alarms" : "My Alarms"}
+              {f === "all" ? "All Alarms" : f === "mine" ? "My Alarms" : "Team"}
             </button>
           ))}
         </div>
