@@ -1,7 +1,24 @@
-import { format, addDays, nextDay, setHours, setMinutes, setSeconds, isBefore, parseISO } from "date-fns";
+import {
+  format,
+  addDays,
+  nextDay,
+  setHours,
+  setMinutes,
+  setSeconds,
+  isBefore,
+  parseISO,
+} from "date-fns";
 
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-export const DAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+export const DAY_FULL = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 export const getNextAlarmDate = (alarm) => {
   const now = new Date();
@@ -52,8 +69,13 @@ export const formatRepeat = (alarm) => {
   if (alarm.repeat === "daily") return "Every day";
   if (alarm.repeat === "weekly" && alarm.days?.length) {
     if (alarm.days.length === 7) return "Every day";
-    if (JSON.stringify(alarm.days) === JSON.stringify(["Mon","Tue","Wed","Thu","Fri"])) return "Weekdays";
-    if (JSON.stringify(alarm.days) === JSON.stringify(["Sat","Sun"])) return "Weekends";
+    if (
+      JSON.stringify(alarm.days) ===
+      JSON.stringify(["Mon", "Tue", "Wed", "Thu", "Fri"])
+    )
+      return "Weekdays";
+    if (JSON.stringify(alarm.days) === JSON.stringify(["Sat", "Sun"]))
+      return "Weekends";
     return alarm.days.join(", ");
   }
   if (alarm.repeat === "monthly") return `Monthly on day ${alarm.monthDay}`;
@@ -69,4 +91,14 @@ export const scheduleLocalAlarm = (alarm, onRing) => {
     onRing(alarm);
   }, ms);
   return timeout;
+};
+
+export const generateInviteCode = () => {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const seg = (n) =>
+    Array.from(
+      { length: n },
+      () => chars[Math.floor(Math.random() * chars.length)],
+    ).join("");
+  return `${seg(3)}-${seg(3)}-${seg(4)}`;
 };

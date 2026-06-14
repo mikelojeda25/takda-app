@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { DAYS } from "../utils/alarmUtils";
+import { generateInviteCode } from "../utils/alarmUtils";
 
 const REPEAT_OPTIONS = [
   { value: "once", label: "Once" },
@@ -32,11 +33,16 @@ export default function AlarmModal({ alarm, onSave, onClose }) {
   };
 
   const handleSave = () => {
-    if (!form.title.trim()) return alert("Pangalan muna ng alarm!");
-    if (!form.time) return alert("I-set ang oras!");
+    if (!form.title.trim()) return alert("Please enter a title!");
+    if (!form.time) return alert("Set the time!");
     if (form.repeat === "weekly" && form.days.length === 0)
-      return alert("Pumili ng kahit isang araw!");
-    onSave(form);
+      return alert("Please select at least one day!");
+
+    const dataToSave = {
+      ...form,
+      inviteCode: form.inviteCode || generateInviteCode(),
+    };
+    onSave(dataToSave);
   };
 
   return (
