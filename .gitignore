@@ -10,7 +10,12 @@ lerna-debug.log*
 .env
 .env.local
 
+<<<<<<< HEAD
 node_modules
+=======
+node_modules/
+takda/node_modules/
+>>>>>>> c42d82c (chore: seperate web app and mobile app versions)
 dist
 dist-ssr
 *.local
