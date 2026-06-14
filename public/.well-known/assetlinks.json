@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.mikelojeda.takda",
+      "sha256_cert_fingerprints": [
+        "74:63:E2:10:10:93:1F:66:9D:EE:38:35:66:98:2F:07:EE:72:4E:49:0A:29:7B:DD:32:B1:F0:B9:A0:56:E1:D1"
+      ]
+    }
+  }
+]
