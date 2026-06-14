@@ -212,24 +212,26 @@ body {
 }
 
 .filter-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
   color: var(--text2);
-  padding: 7px 16px;
-  border-radius: 20px;
+  padding: 7px 4px;
+  border-radius: 0;
   font-size: 13px;
   font-family: "DM Sans", sans-serif;
   cursor: pointer;
   transition: all 0.2s;
 }
 .filter-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
+  background: none;
+  border-bottom: 2px solid var(--accent);
+  color: var(--text);
   font-weight: 600;
 }
 .filter-btn:hover:not(.active) {
-  border-color: var(--accent);
+  background: none;
+  border-bottom: 2px solid var(--text3);
   color: var(--text);
 }
 
@@ -1116,7 +1118,7 @@ body {
 
 .join-input {
   flex: 1;
-  max-width: 200px; /* hindi masyadong malaki sa desktop */
+  width: 250px;
   padding: 7px 14px;
   border-radius: 20px;
   border: 1px solid var(--border);
@@ -1146,13 +1148,19 @@ body {
     flex: none;
   }
 
-  .dash-filters {
-    flex-direction: column-reverse;
-  }
-
   .filter-section {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .join-section {
+    display: flex;
+    width: 100%;
+    align-items: center;
     gap: 10px;
   }
 }
