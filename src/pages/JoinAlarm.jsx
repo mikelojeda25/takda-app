@@ -1,48 +1,59 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function JoinAlarm() {
-  const { alarmId } = useParams();
   const { user, login, loading } = useAuth();
   const navigate = useNavigate();
-  const [status, setStatus] = useState("loading");
+  const [code, setCode] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | joining | done | error | notfound
   const [alarmTitle, setAlarmTitle] = useState("");
 
-  useEffect(() => {
-    if (loading) return;
+  const handleJoin = async () => {
+    if (!code.trim()) return;
     if (!user) {
       setStatus("login");
       return;
     }
-    joinAlarm();
-  }, [user, loading]);
 
-  const joinAlarm = async () => {
     setStatus("joining");
     try {
-      const ref = doc(db, "alarms", alarmId);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        setStatus("error");
+      const q = query(
+        collection(db, "alarms"),
+        where("inviteCode", "==", code.trim().toLowerCase()),
+      );
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        setStatus("notfound");
         return;
       }
-      const data = snap.data();
+
+      const alarmDoc = snap.docs[0];
+      const data = alarmDoc.data();
       setAlarmTitle(data.title);
 
       if (!data.members.includes(user.uid)) {
-        const memberDetail = {
-          uid: user.uid,
-          name: user.displayName,
-          photoURL: user.photoURL,
-        };
-        await updateDoc(ref, {
+        await updateDoc(doc(db, "alarms", alarmDoc.id), {
           members: arrayUnion(user.uid),
-          memberDetails: arrayUnion(memberDetail),
+          memberDetails: arrayUnion({
+            uid: user.uid,
+            name: user.displayName,
+            photoURL: user.photoURL,
+          }),
         });
       }
+
       setStatus("done");
       setTimeout(() => navigate("/dashboard"), 2000);
     } catch (e) {
@@ -54,32 +65,63 @@ export default function JoinAlarm() {
     <div className="join-page">
       <div className="join-card">
         <div className="join-icon">⏰</div>
-        {status === "loading" && <p>Checking invite…</p>}
-        {status === "login" && (
+        <h2>Join an Alarm</h2>
+
+        {!user && !loading && (
           <>
-            <h2>Sign in to join the alarm</h2>
+            <p>Sign in first to join an alarm.</p>
             <button className="google-btn" onClick={login}>
               Continue with Google
             </button>
           </>
         )}
-        {status === "joining" && <p>Joining alarm…</p>}
+
+        {user && status !== "done" && (
+          <>
+            <p>Enter the invite code shared by your team.</p>
+            <div className="invite-link-box">
+              <input
+                type="text"
+                placeholder="e.g. hde-rfr-1234"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleJoin()}
+                style={{
+                  flex: 1,
+                  padding: "0.5rem",
+                  borderRadius: "6px",
+                  border: "1px solid #444",
+                  background: "#1e1e2e",
+                  color: "white",
+                }}
+              />
+              <button
+                className="btn-save"
+                onClick={handleJoin}
+                disabled={status === "joining"}
+              >
+                {status === "joining" ? "Joining…" : "Join"}
+              </button>
+            </div>
+            {status === "notfound" && (
+              <p style={{ color: "salmon" }}>
+                ❌ Code not found. Double-check and try again.
+              </p>
+            )}
+            {status === "error" && (
+              <p style={{ color: "salmon" }}>
+                Something went wrong. Try again.
+              </p>
+            )}
+          </>
+        )}
+
         {status === "done" && (
           <>
             <h2>You're in! 🎉</h2>
             <p>
-              You joined <strong>"{alarmTitle}"</strong>. Redirecting to
-              dashboard…
+              You joined <strong>"{alarmTitle}"</strong>. Redirecting…
             </p>
-          </>
-        )}
-        {status === "error" && (
-          <>
-            <h2>Invalid link</h2>
-            <p>This invite link is expired or doesn't exist.</p>
-            <button className="btn-save" onClick={() => navigate("/dashboard")}>
-              Go to Dashboard
-            </button>
           </>
         )}
       </div>

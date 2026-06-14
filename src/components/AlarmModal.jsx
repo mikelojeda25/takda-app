@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { DAYS } from "../utils/alarmUtils";
-import { generateInviteCode } from "../utils/alarmUtils";
+import { DAYS, generateInviteCode } from "../utils/alarmUtils";
 
 const REPEAT_OPTIONS = [
   { value: "once", label: "Once" },

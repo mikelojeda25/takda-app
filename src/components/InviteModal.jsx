@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
 
 export default function InviteModal({ alarm, onClose }) {
   const [copied, setCopied] = useState(false);
-  const inviteLink = `https://takda.netlify.app/join/${alarm.id}`;
+  const code = alarm.inviteCode || "—";
 
   const copy = () => {
-    navigator.clipboard.writeText(inviteLink);
+    navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -26,18 +24,22 @@ export default function InviteModal({ alarm, onClose }) {
         </div>
         <div className="modal-body">
           <p className="invite-desc">
-            Provide this link to your team. When they click it, they'll
-            automatically join <strong>"{alarm.title}"</strong> and get the
-            alarm too.
+            Share this code with your team to join{" "}
+            <strong>"{alarm.title}"</strong>.
           </p>
           <div className="invite-link-box">
-            <span className="invite-link-text">{inviteLink}</span>
+            <span
+              className="invite-link-text"
+              style={{ letterSpacing: "0.15em", fontWeight: "bold" }}
+            >
+              {code}
+            </span>
             <button className="copy-btn" onClick={copy}>
               {copied ? "✓ Copied!" : "Copy"}
             </button>
           </div>
           <p className="invite-note">
-            💡 They need to be signed in to Takda first.
+            💡 They need to be signed in to Takda, then enter this code to join.
           </p>
         </div>
         <div className="modal-footer">

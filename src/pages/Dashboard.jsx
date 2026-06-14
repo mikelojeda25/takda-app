@@ -7,6 +7,16 @@ import AlarmRing from "../components/AlarmRing";
 import InviteModal from "../components/InviteModal";
 import AlarmDetailModal from "../components/AlarmDetailModal";
 import { Navigate } from "react-router-dom";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function Dashboard() {
   const { user, logout, loading } = useAuth();
@@ -16,6 +26,43 @@ export default function Dashboard() {
   const [inviteAlarm, setInviteAlarm] = useState(null);
   const [detailAlarm, setDetailAlarm] = useState(null);
   const [filter, setFilter] = useState("all");
+  const [joinCode, setJoinCode] = useState("");
+  const [joinStatus, setJoinStatus] = useState("idle");
+
+  const handleJoin = async () => {
+    if (!joinCode.trim()) return;
+    setJoinStatus("joining");
+    try {
+      const q = query(
+        collection(db, "alarms"),
+        where("inviteCode", "==", joinCode.trim().toLowerCase()),
+      );
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        setJoinStatus("notfound");
+        return;
+      }
+
+      const alarmDoc = snap.docs[0];
+      const data = alarmDoc.data();
+      if (data.members.includes(user.uid)) {
+        setJoinStatus("existing");
+        return;
+      }
+      await updateDoc(doc(db, "alarms", alarmDoc.id), {
+        members: arrayUnion(user.uid),
+        memberDetails: arrayUnion({
+          uid: user.uid,
+          name: user.displayName,
+          photoURL: user.photoURL,
+        }),
+      });
+      setJoinStatus("done");
+      setJoinCode("");
+    } catch (e) {
+      setJoinStatus("error");
+    }
+  };
 
   const { alarms, createAlarm, updateAlarm, deleteAlarm, toggleAlarm } =
     useAlarms((alarm) => setRinging(alarm));
@@ -60,15 +107,35 @@ export default function Dashboard() {
       </header>
 
       <div className="dash-filters">
-        {["all", "mine"].map((f) => (
+        <div className="filter-section">
+          {["all", "mine"].map((f) => (
+            <button
+              key={f}
+              className={`filter-btn ${filter === f ? "active" : ""}`}
+              onClick={() => setFilter(f)}
+            >
+              {f === "all" ? "All Alarms" : "My Alarms"}
+            </button>
+          ))}
+        </div>
+
+        <div className="join-section">
+          <input
+            type="text"
+            className="join-input"
+            placeholder="Enter invite code (e.g. hde-rfr-1234)"
+            value={joinCode}
+            onChange={(e) => setJoinCode(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleJoin()}
+          />
           <button
-            key={f}
-            className={`filter-btn ${filter === f ? "active" : ""}`}
-            onClick={() => setFilter(f)}
+            className="btn-save"
+            onClick={handleJoin}
+            disabled={joinStatus === "joining"}
           >
-            {f === "all" ? "All Alarms" : "My Alarms"}
+            {joinStatus === "joining" ? "Joining…" : "Join Alarm"}
           </button>
-        ))}
+        </div>
       </div>
 
       <main className="dash-main">
@@ -130,6 +197,39 @@ export default function Dashboard() {
       )}
       {ringing && (
         <AlarmRing alarm={ringing} onDismiss={() => setRinging(null)} />
+      )}
+
+      {["done", "existing", "notfound", "error"].includes(joinStatus) && (
+        <div className="modal-overlay" onClick={() => setJoinStatus("idle")}>
+          <div
+            className="modal-card join-result-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="join-result-icon">
+              {joinStatus === "done" && "🎉"}
+              {joinStatus === "existing" && "✅"}
+              {joinStatus === "notfound" && "❌"}
+              {joinStatus === "error" && "⚠️"}
+            </div>
+            <h2>
+              {joinStatus === "done" && "Joined!"}
+              {joinStatus === "existing" && "Already a Member"}
+              {joinStatus === "notfound" && "Code Not Found"}
+              {joinStatus === "error" && "Something went wrong"}
+            </h2>
+            <p>
+              {joinStatus === "done" && "You've successfully joined the alarm."}
+              {joinStatus === "existing" &&
+                "You're already a member of this alarm."}
+              {joinStatus === "notfound" &&
+                "Double-check the invite code and try again."}
+              {joinStatus === "error" && "Please try again later."}
+            </p>
+            <button className="btn-save" onClick={() => setJoinStatus("idle")}>
+              Got it
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

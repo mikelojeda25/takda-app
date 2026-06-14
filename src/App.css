@@ -198,8 +198,17 @@ body {
 
 .dash-filters {
   display: flex;
+  justify-content: space-between;
   gap: 8px;
   padding: 16px 20px 8px;
+}
+
+.dash-filters .btn-save {
+  flex: none;
+  padding: 7px 16px;
+  font-size: 13px;
+  border-radius: 20px;
+  font-weight: 600;
 }
 
 .filter-btn {
@@ -674,7 +683,7 @@ body {
 
 .btn-save {
   flex: 2;
-  background: var(--accent);
+  background: #ffffff;
   border: none;
   color: #000;
   padding: 14px;
@@ -1094,4 +1103,92 @@ body {
 .comment-send:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.join-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.join-input {
+  flex: 1;
+  max-width: 200px; /* hindi masyadong malaki sa desktop */
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 13px;
+  font-family: "DM Sans", sans-serif;
+  transition: border 0.2s;
+}
+.join-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Mobile — join sa taas ng filters */
+@media (max-width: 680px) {
+  .dash-filters {
+    flex-wrap: wrap;
+  }
+  .join-input {
+    max-width: 100%;
+    order: -1;
+    flex: 1 1 100%;
+  }
+  .dash-filters .btn-save {
+    order: -1;
+    flex: none;
+  }
+
+  .dash-filters {
+    flex-direction: column-reverse;
+  }
+
+  .filter-section {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+.join-result-modal {
+  margin: auto; /* ← ito lang idagdag */
+  border-radius: 24px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  max-width: 320px;
+}
+
+.join-result-icon {
+  font-size: 48px;
+}
+.join-result-modal h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.join-result-modal p {
+  font-size: 14px;
+  color: var(--text2);
+}
+.join-result-modal .btn-save {
+  flex: none;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.filter-section,
+.join-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }

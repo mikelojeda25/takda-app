@@ -12,7 +12,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/join/:alarmId" element={<JoinAlarm />} />
+          <Route path="/join" element={<JoinAlarm />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
