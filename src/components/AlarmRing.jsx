@@ -33,6 +33,7 @@ export default function AlarmRing({ alarm, onDismiss }) {
   }, []);
 
   // Helper function para gawing 12-hour format na may AM/PM
+  //Testing lang
   const formatTime = (timeString) => {
     if (!timeString) return "";
     const [hoursStr, minutesStr] = timeString.split(":");
