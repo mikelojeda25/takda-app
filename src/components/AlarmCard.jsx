@@ -77,7 +77,15 @@ export default function AlarmCard({
               </button>
               <button
                 className="action-btn danger"
-                onClick={() => onDelete(alarm.id)}
+                onClick={() => {
+                  const confirmed = window.confirm(
+                    `This action will permanently DELETE "${alarm.title}" alarm. This cannot be undone.`,
+                  );
+
+                  if (confirmed) {
+                    onDelete(alarm.id);
+                  }
+                }}
                 title="Delete"
               >
                 <Trash2 size={15} />

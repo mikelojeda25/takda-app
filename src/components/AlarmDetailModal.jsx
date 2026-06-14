@@ -151,7 +151,15 @@ export default function AlarmDetailModal({ alarm, currentUser, onClose }) {
                     {canDelete(c) && (
                       <button
                         className="comment-delete"
-                        onClick={() => deleteComment(c)}
+                        onClick={() => {
+                          const confirmed = window.confirm(
+                            "Please confirm that you want to permanently DELETE this comment. This action cannot be reversed.",
+                          );
+
+                          if (confirmed) {
+                            deleteComment(c);
+                          }
+                        }}
                       >
                         ✕
                       </button>
