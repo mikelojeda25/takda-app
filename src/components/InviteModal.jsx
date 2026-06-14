@@ -4,7 +4,7 @@ import { db } from "../firebase";
 
 export default function InviteModal({ alarm, onClose }) {
   const [copied, setCopied] = useState(false);
-  const inviteLink = `https://takda.netlify.app/join/${alarm.id}`;
+  const inviteLink = `${window.location.origin}/join/${alarm.id}`;
 
   const copy = () => {
     navigator.clipboard.writeText(inviteLink);
